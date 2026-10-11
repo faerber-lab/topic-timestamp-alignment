@@ -1,10 +1,12 @@
 # Heading-to-Timestamp Alignment in Long-Duration Public Speech and Municipal Meetings Recordings 
 
-This repository contains an anonymized EMNLP artifact for **heading-to-timestamp alignment**: given a natural-language topic heading, the system returns the timestamp where that topic starts in a long transcript.
+This repository contains the anonymized research artifact for **topic-to-timestamp alignment**: given a natural-language topic heading, the system returns the timestamp where that topic starts in a long transcript.
 
 The benchmark focuses on **long-form public speech recordings**, primarily municipal and government meetings such as city council meetings, town halls, budget hearings, workshops, committee sessions, and public forums. A small subset of long-form public speech recordings is included to increase variation in topic structure and speaking style.
 
 The artifact is released as an **annotation layer** plus reproducibility code. It does **not** redistribute third-party media, full transcripts, or text-containing chunks.
+
+**Supplementary material for the paper** (dataset construction details, prompt templates, exact model identifiers, offline retrieval evaluation, error analysis, and implementation details) is provided in [SUPPLEMENTARY.md](SUPPLEMENTARY.md).
 
 ---
 
@@ -22,7 +24,7 @@ Output:
 00:42:18
 ```
 
-The input heading may be exact, normalized, or query-like. The system retrieves candidate transcript chunks and asks an LLM to identify the candidate timestamp corresponding to the start of the requested topic. The main evaluated strategy uses **time-window chunking**, **hybrid retrieval**, and **constrained Chunk-ID prediction**.
+The input heading may be exact, normalized, or query-like. The system retrieves candidate transcript windows and asks an LLM to select the candidate utterance that marks the start of the requested topic; the timestamp is then resolved deterministically from the selected utterance. The main evaluated strategy uses **time-window chunking**, **hybrid retrieval**, and **constrained Candidate-ID selection** (referred to as `chunk_id` output mode in the code).
 
 ---
 
