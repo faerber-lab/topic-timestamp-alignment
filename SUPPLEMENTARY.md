@@ -24,7 +24,7 @@ We collected 200 public municipal meeting recordings. Audio was converted to 16 
 
 ### Annotation
 
-The candidate set contains 600 topic–timestamp pairs. Each instance consists of a source transcript, a topic heading, and a gold timestamp marking the start of the corresponding discussion. When public video descriptions provided timestamps, these were used as initial boundaries and checked against the transcript. Missing boundaries were identified manually from the video and transcript. The dataset was curated by a single annotator; we therefore do not report inter-annotator agreement.
+The candidate set contains 600 topic–timestamp pairs. Each instance consists of a source transcript, a topic heading, and a gold timestamp marking the start of the corresponding discussion. When public video descriptions provided timestamps, these were used as initial boundaries. Missing boundaries were identified manually from the video and transcript. The dataset was curated by a single annotator; we therefore do not report inter-annotator agreement.
 
 ### Procedural filtering
 
@@ -90,7 +90,7 @@ Rules: Output ONLY the Candidate-ID, e.g., C03. Do NOT output a timestamp.
 
 ## 3. Offline Retrieval Evaluation
 
-To test whether the Recall@5 gains observed with larger temporal windows are merely a geometric artifact of bracketing the gold timestamp, we evaluated the retrieval stage independently of the language model. Increasing the window size and using Hybrid RRF improves not only Recall@5 but also Precision@5 and F1@5, which indicates real ranking improvements rather than coverage effects alone.
+For completeness, we report Precision@5 and F1@5 for the retrieval stage, evaluated independently of the language model. A retrieved window counts as relevant if it contains the gold timestamp; Precision@5 is the mean fraction of the top five windows that are relevant.
 
 **Table S2.** Offline retrieval performance.
 
@@ -110,19 +110,21 @@ To test whether the Recall@5 gains observed with larger temporal windows are mer
 We group errors into three categories:
 
 1. the relevant segment is not retrieved;
-2. the selected chunk is topically related but temporally offset;
+2. the selected utterance is topically related but temporally offset;
 3. the output is invalid or unparseable.
 
 The proposed system reduces invalid outputs and large outlier errors, but does not remove boundary-offset errors.
 
-**Table S3.** Absolute-error (AE) statistics on the 420-query benchmark.
+**Table S3.** Absolute-error (AE) statistics, end-to-end comparison (Standard RAG vs. proposed pipeline).
 
-| System | Median AE | P95 AE |
-|---|---:|---:|
-| Mistral baseline | 150.0s | 3962.2s |
-| Mistral proposed | 204.0s | 3313.9s |
-| GPT-5.4 baseline | – | 4966.0s |
-| GPT-5.4 proposed | – | 3173.4s |
+| System | Queries | Median AE | P95 AE |
+|---|---:|---:|---:|
+| Mistral baseline (own parsed subset) | 373 | 150.0s | 3962.2s |
+| Mistral proposed (own parsed subset) | 419 | 204.0s | 3313.9s |
+| GPT-5.4 baseline (own parsed subset) | 406 | 284.0s | 4966.0s |
+| GPT-5.4 proposed (own parsed subset) | 420 | 191.0s | 3173.4s |
+| Mistral baseline / proposed (parsed by both) | 372 | 151.0s / 177.5s | 3965.6s / 3598.7s |
+| GPT-5.4 baseline / proposed (parsed by both) | 406 | 284.0s / 180.5s | 4966.0s / 3263.0s |
 
 ### Qualitative error patterns
 
